@@ -6,6 +6,10 @@ authors = ["Eldos <eldos.baktybekov@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
+aiogram = "^2.19"
+SQLAlchemy = {extras = ["asyncio"], version = "^1.4.31"}
+asyncpg = "^0.25.0"
+pendulum = "^2.1.2"
 
 [tool.poetry.dev-dependencies]
 
