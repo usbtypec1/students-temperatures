@@ -1,12 +1,14 @@
-import os
+from environs import Env
 
 __all__ = (
-    'DATABASE_URL',
+    'ADMINS_TELEGRAM_BOT_TOKEN',
+    'USERS_TELEGRAM_BOT_TOKEN',
+    'ADMINS_TELEGRAM_IDS',
 )
 
-DATABASE_URL = os.getenv('DATABASE_URL')
+env = Env()
+env.read_env()
 
-if DATABASE_URL is None:
-    print('DATABASE_URL environment variable is not set up')
-else:
-    DATABASE_URL = '://'.join(('postgresql+asyncpg', DATABASE_URL.split('://')[1]))
+ADMINS_TELEGRAM_IDS = env.list('ADMINS_TELEGRAM_IDS', subcast=int)
+USERS_TELEGRAM_BOT_TOKEN = env.str('USERS_TELEGRAM_BOT_TOKEN')
+ADMINS_TELEGRAM_BOT_TOKEN = env.str('ADMINS_TELEGRAM_BOT_TOKEN')
