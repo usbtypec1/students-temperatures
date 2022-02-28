@@ -10,6 +10,8 @@ aiogram = "^2.19"
 pendulum = "^2.1.2"
 peewee = "^3.14.9"
 environs = "^9.5.0"
+fuzzywuzzy = "^0.18.0"
+python-Levenshtein = "^0.12.2"
 
 [tool.poetry.dev-dependencies]
 
