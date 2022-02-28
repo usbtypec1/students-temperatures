@@ -4,7 +4,8 @@ from peewee import (
     Model,
     BigIntegerField,
     FloatField,
-    DateTimeField,
+    DateField,
+    TimeField,
 )
 
 from db.engine import database
@@ -22,8 +23,8 @@ class BaseModel(Model):
 
 class User(BaseModel):
     telegram_id = BigIntegerField(unique=True, index=True)
-    first_name = CharField(max_length=64)
-    last_name = CharField(max_length=64)
+    first_name = CharField(max_length=64, index=True)
+    last_name = CharField(max_length=64, index=True)
 
     def __repr__(self):
         return f'<User: {self.last_name} {self.first_name}>'
@@ -34,9 +35,10 @@ class User(BaseModel):
 
 class TemperatureRecord(BaseModel):
     student = ForeignKeyField(User, on_delete='CASCADE')
-    recorded_by = ForeignKeyField(User, on_delete='CASCADE')
+    recorded_by = ForeignKeyField(User, on_delete='CASCADE', null=True)
     temperature_value = FloatField()
-    edited_at = DateTimeField()
+    edited_at_time = TimeField()
+    recorded_at_date = DateField()
 
     def __repr__(self):
         return f'<Temperature Record: {self.id}>'
