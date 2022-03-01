@@ -53,7 +53,7 @@ def update_student_temperature_by_current_time(
         temperature_value=temperature_value,
         recorded_at_date=time_utils.get_today_date().isoformat(),
         edited_at_time=time_utils.get_current_time().isoformat(),
-    ).where(TemperatureRecord == today_temperature).execute()
+    ).where(TemperatureRecord.id == today_temperature.id).execute()
 
 
 def get_today_temperature_records() -> Iterable[TemperatureRecord]:
