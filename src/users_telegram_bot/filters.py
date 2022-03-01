@@ -7,6 +7,13 @@ from aiogram.types import Message
 import db
 from users_telegram_bot import parsers
 
+__all__ = (
+    'ClassmateTemperatureFilter',
+    'NameMatchRatioThresholdFilter',
+    'ValidTemperatureFilter',
+    'StudentOwnTemperatureFilter',
+)
+
 
 class ClassmateTemperatureFilter(BoundFilter):
     """
@@ -24,8 +31,6 @@ class ClassmateTemperatureFilter(BoundFilter):
 class StudentOwnTemperatureFilter(BoundFilter):
     """
     This filter ensures that user is going to mark his own temperature.
-    Also filter passes out temperature that user entered.
-    To handle it, define 'temperature'(float) as argument in your handler.
     """
     key = 'student_own_temperature'
 
@@ -35,6 +40,10 @@ class StudentOwnTemperatureFilter(BoundFilter):
 
 
 class ValidTemperatureFilter(BoundFilter):
+    """
+    This filter validates temperature and classmate's name (if passed).
+    Also filter passes out them into handler.
+    """
     key = 'valid_temperature'
 
     async def check(self, message: Message) -> Union[bool, dict]:
@@ -52,6 +61,11 @@ class ValidTemperatureFilter(BoundFilter):
 
 
 class NameMatchRatioThresholdFilter(BoundFilter):
+    """
+    This filter ensures classmate's name that user entered matches to any classmate.
+    Also filter passes out that classmate's user object and matched ratio in percent.
+    """
+    key = 'name_match_ratio_threshold'
 
     def __init__(self, ratio_threshold: Union[int, float]):
         self.__ratio_threshold = ratio_threshold

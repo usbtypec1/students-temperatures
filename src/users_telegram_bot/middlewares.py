@@ -12,6 +12,12 @@ from users_telegram_bot.responses import Response
 
 
 class OnlyStudentsMiddleware(BaseMiddleware):
+    """
+    Ensure user is existing in database.
+    If so, that user object passes in middleware state as 'current_user'.
+    If you want to use that 'current_user' object,
+    you should define it as kwarg in your handler.
+    """
 
     async def on_pre_process_message(self, message: Message, data: dict):
         current_user = db.get_user_or_none_by_telegram_id(message.from_user.id)
@@ -22,6 +28,9 @@ class OnlyStudentsMiddleware(BaseMiddleware):
 
 
 class ProcessResponseMiddleware(BaseMiddleware):
+    """
+    This middleware processes all response objects that returned from any handler.
+    """
 
     async def on_post_process_message(self, message: Message, data_from_handler: list, data: dict):
         if not data_from_handler:
