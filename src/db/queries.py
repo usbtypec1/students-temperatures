@@ -10,6 +10,8 @@ __all__ = (
     'add_user_today_temperature',
     'get_student_temperature_records',
     'update_student_temperature_by_current_time',
+    'get_today_temperature_records',
+    'get_users_exclude_by_id',
 )
 
 
@@ -52,3 +54,14 @@ def update_student_temperature_by_current_time(
         recorded_at_date=time_utils.get_today_date().isoformat(),
         edited_at_time=time_utils.get_current_time().isoformat(),
     ).where(TemperatureRecord == today_temperature).execute()
+
+
+def get_today_temperature_records() -> Iterable[TemperatureRecord]:
+    today_date = time_utils.get_today_date().isoformat()
+    return (TemperatureRecord.select(TemperatureRecord, User)
+            .join(User, on=(User.id == TemperatureRecord.student))
+            .where(TemperatureRecord.recorded_at_date == today_date).execute())
+
+
+def get_users_exclude_by_id(user_ids: Iterable[int]) -> Iterable[User]:
+    return User.select().where(User.id.not_in(user_ids)).execute()
