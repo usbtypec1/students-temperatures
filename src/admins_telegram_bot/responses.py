@@ -1,29 +1,13 @@
-from typing import Union, Optional, Iterable
-
-from aiogram.types import ReplyKeyboardMarkup, InlineKeyboardMarkup
+from typing import Optional, Iterable
 
 import db
 from admins_telegram_bot import keyboards
+from common.responses import Response, KeyboardMarkup
 
 __all__ = (
-    'Response',
     'MainMenuResponse',
     'TemperaturesReportResponse',
 )
-
-KeyboardMarkup = Union[ReplyKeyboardMarkup, InlineKeyboardMarkup]
-
-
-class Response:
-
-    def get_chat_id(self) -> Optional[int]:
-        """Override if you want to send response to certain chat."""
-
-    def get_text(self) -> Optional[str]:
-        """Override if you want to return any text."""
-
-    def get_reply_markup(self) -> Optional[KeyboardMarkup]:
-        """Override if you want to return any type of keyboard markup."""
 
 
 class TemperaturesReportResponse(Response):
@@ -38,7 +22,7 @@ class TemperaturesReportResponse(Response):
         if not self.__records:
             return 'Никто пока не отметил свою температуру 😕'
         lines = ['Отметили температуру:']
-        lines += [f'{report.student.first_name.title()}: {report.temperature_value}'
+        lines += [f'{report.student.first_name.title()}: {report.temperature_value:.1f}'
                   for report in self.__records]
         lines += ['\nЕщё не отметили температуру:']
         lines += [f'{user.first_name.title()}' for user in self.__users_without_records]

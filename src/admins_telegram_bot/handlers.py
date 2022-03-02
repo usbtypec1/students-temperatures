@@ -3,7 +3,7 @@ from aiogram.types import Message, ChatType, ContentType
 
 import db
 from admins_telegram_bot.bot import dp
-from admins_telegram_bot import  responses
+from admins_telegram_bot import responses
 
 
 @dp.message_handler(

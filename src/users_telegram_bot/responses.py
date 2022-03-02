@@ -1,12 +1,11 @@
 import random
-from typing import Union, Optional, Iterable
-
-from aiogram.types import ReplyKeyboardMarkup, InlineKeyboardMarkup
+from typing import Optional, Iterable
 
 import db
+from common.responses import Response, KeyboardMarkup
+from users_telegram_bot import keyboards
 
 __all__ = (
-    'Response',
     'ClassmatesListResponse',
     'TemperaturesHistoryResponse',
     'MarkTemperatureFAQResponse',
@@ -16,22 +15,6 @@ __all__ = (
     'MainMenuResponse',
     'MyTemperatureMarkedResponse',
 )
-
-from users_telegram_bot import keyboards
-
-KeyboardMarkup = Union[ReplyKeyboardMarkup, InlineKeyboardMarkup]
-
-
-class Response:
-
-    def get_chat_id(self) -> Optional[int]:
-        """Override if you want to send response to certain chat."""
-
-    def get_text(self) -> Optional[str]:
-        """Override if you want to return any text."""
-
-    def get_reply_markup(self) -> Optional[KeyboardMarkup]:
-        """Override if you want to return any type of keyboard markup."""
 
 
 class ClassmatesListResponse(Response):

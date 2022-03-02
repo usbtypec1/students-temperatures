@@ -1,5 +1,6 @@
 from typing import Optional, Iterable
 
+import db
 from db.models import User, TemperatureRecord
 from utils import time_utils
 
@@ -48,9 +49,11 @@ def add_user_today_temperature(temperature_value: float, student: User,
 
 
 def update_student_temperature_by_current_time(
-        today_temperature: TemperatureRecord, temperature_value: float):
+        today_temperature: TemperatureRecord, temperature_value: float,
+        recorded_by: Optional[db.User] = None):
     TemperatureRecord.update(
         temperature_value=temperature_value,
+        recorded_by=recorded_by,
         recorded_at_date=time_utils.get_today_date().isoformat(),
         edited_at_time=time_utils.get_current_time().isoformat(),
     ).where(TemperatureRecord.id == today_temperature.id).execute()

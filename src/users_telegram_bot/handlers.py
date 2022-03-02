@@ -101,7 +101,7 @@ async def on_classmate_temperature_input(
         db.add_user_today_temperature(temperature, classmate_user, current_user)
         return responses_on_success
     elif today_temperature.recorded_by is not None:
-        db.update_student_temperature_by_current_time(today_temperature, temperature)
+        db.update_student_temperature_by_current_time(today_temperature, temperature, current_user)
         return responses_on_success
     elif today_temperature.recorded_by is None:
         return responses.ClassmateTemperatureAlreadyMarkedResponse()

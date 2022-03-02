@@ -1,11 +1,10 @@
-from typing import Iterable
-
 from aiogram import Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from aiogram.dispatcher.middlewares import BaseMiddleware
 from aiogram.types import ParseMode, BotCommand
 
 import config
+from common.middlewares import ProcessResponseMiddleware
+from users_telegram_bot.middlewares import OnlyStudentsMiddleware
 
 __all__ = (
     'bot',
@@ -28,11 +27,15 @@ async def setup_bot_commands(dispatcher: Dispatcher):
     ])
 
 
-def setup_middlewares(dispatcher: Dispatcher,
-                      middlewares_for_setup: Iterable[BaseMiddleware]) -> None:
+def setup_middlewares(dispatcher: Dispatcher) -> None:
+    middlewares_for_setup = (
+        ProcessResponseMiddleware(dispatcher.bot),
+        OnlyStudentsMiddleware(),
+    )
     for middleware in middlewares_for_setup:
         dispatcher.setup_middleware(middleware)
 
 
 async def on_bot_startup(dispatcher: Dispatcher):
+    setup_middlewares(dispatcher)
     await setup_bot_commands(dispatcher)
