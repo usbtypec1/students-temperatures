@@ -13,7 +13,7 @@ dp = Dispatcher(bot, storage=MemoryStorage())
 def setup_middlewares(dispatcher: Dispatcher) -> None:
     middlewares_for_setup = (
         ProcessResponseMiddleware(dispatcher.bot),
-        OnlyAdminsMiddleware(),
+        OnlyAdminsMiddleware(dispatcher.bot),
     )
     for middleware in middlewares_for_setup:
         dispatcher.setup_middleware(middleware)
