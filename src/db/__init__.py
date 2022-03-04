@@ -1,3 +1,4 @@
+from . import init_db
 from .engine import *
 from .models import *
 from .queries import *

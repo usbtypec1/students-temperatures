@@ -1,18 +1,10 @@
-import csv
-import logging
-
-from peewee import IntegrityError
-
 import config
 from db.models import User
 
-with open(config.STUDENTS_CSV_FILE_PATH, encoding='utf-8') as csv_file:
-    reader = csv.reader(csv_file)
-    next(reader)
+telegram_id_to_user = {user.telegram_id: user for user in User.select()}
 
-    for telegram_id, first_name, last_name in reader:
-        try:
-            User.create(telegram_id=telegram_id, first_name=first_name, last_name=last_name)
-        except IntegrityError:
-            logging.debug('Could not create user in DB: '
-                          f'{telegram_id=} {first_name=} {last_name=}')
+for student in config.STUDENTS:
+    if student.telegram_id not in telegram_id_to_user:
+        User.create(telegram_id=student.telegram_id,
+                    first_name=student.first_name,
+                    last_name=student.last_name)
