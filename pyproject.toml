@@ -12,7 +12,6 @@ peewee = "^3.14.9"
 fuzzywuzzy = "^0.18.0"
 python-Levenshtein = "^0.12.2"
 openpyxl = "^3.0.9"
-pandas = "^1.4.1"
 psycopg2-binary = "^2.9.3"
 
 [tool.poetry.dev-dependencies]
