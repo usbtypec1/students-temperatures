@@ -1,7 +1,7 @@
 from aiogram import executor
 
-from users_telegram_bot import handlers
-from users_telegram_bot.bot import dp, on_bot_startup
+import telegram_bot.handlers
+from telegram_bot.bot import dp, on_bot_startup
 
 
 def main():
