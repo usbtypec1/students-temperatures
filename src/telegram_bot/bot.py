@@ -3,8 +3,7 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.types import ParseMode, BotCommand
 
 import config
-from common.middlewares import ProcessResponseMiddleware
-from users_telegram_bot.middlewares import OnlyStudentsMiddleware
+from telegram_bot.middlewares import ProcessResponseMiddleware
 
 __all__ = (
     'bot',
@@ -14,7 +13,7 @@ __all__ = (
     'setup_middlewares',
 )
 
-bot = Bot(config.USERS_TELEGRAM_BOT_TOKEN, parse_mode=ParseMode.HTML)
+bot = Bot(config.TELEGRAM_BOT_TOKEN, parse_mode=ParseMode.HTML)
 dp = Dispatcher(bot, storage=MemoryStorage())
 
 
@@ -24,14 +23,12 @@ async def setup_bot_commands(dispatcher: Dispatcher):
         BotCommand('mark_temperature', 'Отметить температуру 🔥'),
         BotCommand('classmates', 'Список любимых одноклассников 👦🏿'),
         BotCommand('history', 'Моя история отметок температур 📆'),
+        BotCommand('temperatures_report', 'Сегодняшние температуры'),
     ])
 
 
 def setup_middlewares(dispatcher: Dispatcher) -> None:
-    middlewares_for_setup = (
-        ProcessResponseMiddleware(dispatcher.bot),
-        OnlyStudentsMiddleware(),
-    )
+    middlewares_for_setup = (ProcessResponseMiddleware(dispatcher.bot),)
     for middleware in middlewares_for_setup:
         dispatcher.setup_middleware(middleware)
 

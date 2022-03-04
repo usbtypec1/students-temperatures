@@ -6,7 +6,7 @@ from aiogram.dispatcher.middlewares import BaseMiddleware
 from aiogram.types import Message, CallbackQuery
 from aiogram.utils.exceptions import TelegramAPIError
 
-from common.responses import Response
+from telegram_bot.responses import Response
 
 
 class ProcessResponseMiddleware(BaseMiddleware):

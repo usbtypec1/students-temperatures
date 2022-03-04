@@ -1,20 +1,57 @@
 import random
-from typing import Optional, Iterable
+from typing import Optional, Union, Iterable
 
-import db
-from common.responses import Response, KeyboardMarkup
-from users_telegram_bot import keyboards
+from aiogram.types import ReplyKeyboardMarkup, InlineKeyboardMarkup
 
 __all__ = (
-    'ClassmatesListResponse',
-    'TemperaturesHistoryResponse',
-    'MarkTemperatureFAQResponse',
-    'ClassmateTemperatureSuccessfullyMarkedResponse',
-    'ClassmateTemperatureAlreadyMarkedResponse',
-    'OwnTemperatureMarkedByClassmateResponse',
-    'MainMenuResponse',
-    'MyTemperatureMarkedResponse',
+    'KeyboardMarkup',
+    'Response',
 )
+
+import db
+from telegram_bot.keyboards import markups
+
+KeyboardMarkup = Union[ReplyKeyboardMarkup, InlineKeyboardMarkup]
+
+
+class Response:
+
+    def get_chat_id(self) -> Optional[int]:
+        """Override if you want to send response to certain chat."""
+
+    def get_text(self) -> Optional[str]:
+        """Override if you want to return any text."""
+
+    def get_reply_markup(self) -> Optional[KeyboardMarkup]:
+        """Override if you want to return any type of keyboard markup."""
+
+
+class AdminMenuResponse(Response):
+
+    def get_text(self) -> Optional[str]:
+        return 'Главное меню 👨‍💻'
+
+    def get_reply_markup(self) -> Optional[KeyboardMarkup]:
+        return markups.AdminMenuMarkup()
+
+
+class MarkTemperatureNotificationResponse(Response):
+    __slots__ = ('__chat_id',)
+
+    def __init__(self, chat_id: int):
+        self.__chat_id = chat_id
+
+    def get_chat_id(self) -> Optional[int]:
+        return self.__chat_id
+
+    def get_text(self) -> Optional[str]:
+        return 'Пожалуйста, отметьте вашу температуру ❗️'
+
+
+class NotificationsSentResponse(Response):
+
+    def get_text(self) -> Optional[str]:
+        return 'Напоминания отправлены 👌'
 
 
 class ClassmatesListResponse(Response):
@@ -113,4 +150,37 @@ class MainMenuResponse(Response):
         return 'Главное меню 🧑‍💻'
 
     def get_reply_markup(self) -> Optional[KeyboardMarkup]:
-        return keyboards.MainMenuMarkup()
+        return markups.MainMenuMarkup()
+
+
+class MarkedTemperaturesReportResponse(Response):
+    __slots__ = ('__records',)
+
+    def __init__(self, records: Iterable[db.TemperatureRecord]):
+        self.__records = records
+
+    def get_text(self) -> Optional[str]:
+        if not self.__records:
+            return 'Пока никто не отметил свою температуру 😕'
+        lines = ['<b>Температуры учеников:</b>']
+        lines += [f'{report.student.first_name.title()}: {report.temperature_value:.1f}'
+                  for report in self.__records]
+        return '\n'.join(lines)
+
+
+class StudentsWithoutTemperatureRecordsResponse(Response):
+    __slots__ = ('__users_without_records',)
+
+    def __init__(self, users_without_records: Iterable[db.User]):
+        self.__users_without_records = users_without_records
+
+    def get_text(self) -> Optional[str]:
+        if not self.__users_without_records:
+            return 'Все отметили температуру 🥳'
+        lines = ['<b>Ещё не отметили температуру:</b>']
+        lines += [f'{user.first_name.title()}' for user in self.__users_without_records]
+        return '\n'.join(lines)
+
+    def get_reply_markup(self) -> Optional[KeyboardMarkup]:
+        if self.__users_without_records:
+            return markups.NotMarkedTemperaturesMenuMarkup()

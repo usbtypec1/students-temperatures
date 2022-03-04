@@ -1,32 +1,35 @@
-from aiogram.dispatcher.filters import Command, Text
-from aiogram.types import Message, ChatType, ContentType, CallbackQuery
+from aiogram.dispatcher.filters import Text, Command
+from aiogram.types import ChatType, ContentType, Message, CallbackQuery
 
 import db
-from admins_telegram_bot import responses
-from admins_telegram_bot.bot import dp
+from telegram_bot import responses, filters
+from telegram_bot.bot import dp
 
 
-@dp.callback_query_handler()
+@dp.callback_query_handler(
+    filters.OnlyStudentsFilter(),
+)
 async def on_notify_to_mark_temperatures_cb(callback_query: CallbackQuery):
     await callback_query.answer()
     today_records = db.get_today_temperature_records()
     user_ids = [record.student.id for record in today_records]
     users_without_temperature_records = db.get_users_exclude_by_id(user_ids)
-    mark_temperature_notifications = [
-        responses.MarkTemperatureNotificationResponse(user.telegram_id)
-        for user in users_without_temperature_records]
-    return responses.NotificationsSentResponse(), *mark_temperature_notifications
+    # mark_temperature_notifications = [
+    #     responses.MarkTemperatureNotificationResponse(user.telegram_id)
+    #     for user in users_without_temperature_records]
+    # return responses.NotificationsSentResponse(), *mark_temperature_notifications
+    return responses.NotificationsSentResponse()
 
 
 @dp.message_handler(
     Text('📄 Отчёт о температурах учеников'),
-    chat_type=ChatType.PRIVATE,
+    filters.OnlyAdminsFilter(),
     state='*',
     content_types=ContentType.TEXT,
 )
 @dp.message_handler(
     Command('temperatures_report'),
-    chat_type=ChatType.PRIVATE,
+    filters.OnlyAdminsFilter(),
     state='*',
     content_types=ContentType.TEXT,
 )
@@ -39,9 +42,9 @@ async def on_temperatures_report_command(message: Message):
 
 
 @dp.message_handler(
-    chat_type=ChatType.PRIVATE,
+    filters.OnlyAdminsFilter(),
     state='*',
     content_types=ContentType.TEXT,
 )
-async def on_start_command(message: Message):
-    return responses.MainMenuResponse()
+async def on_admin_start_command(message: Message):
+    return responses.AdminMenuResponse()

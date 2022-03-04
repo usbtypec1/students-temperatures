@@ -1,17 +1,20 @@
 from typing import Union
 
 from aiogram.dispatcher.filters import BoundFilter
-from aiogram.dispatcher.handler import CancelHandler
+from aiogram.dispatcher.handler import CancelHandler, SkipHandler
 from aiogram.types import Message
 
+import config
 import db
-from users_telegram_bot import parsers
+from telegram_bot import parsers
 
 __all__ = (
     'ClassmateTemperatureFilter',
     'NameMatchRatioThresholdFilter',
     'ValidTemperatureFilter',
     'StudentOwnTemperatureFilter',
+    'OnlyAdminsFilter',
+    'OnlyStudentsFilter',
 )
 
 
@@ -78,3 +81,22 @@ class NameMatchRatioThresholdFilter(BoundFilter):
             await message.answer(f'Ученик по имени <b>{classmate_name}</b> не найден')
             raise CancelHandler
         return {'classmate_user': student, 'ratio': ratio}
+
+
+class OnlyAdminsFilter(BoundFilter):
+
+    key = 'only_admins'
+
+    async def check(self, message: Message) -> Union[dict, bool]:
+        return message.from_user.id in config.ADMIN_CHAT_IDS
+
+
+class OnlyStudentsFilter(BoundFilter):
+
+    key = 'only_students'
+
+    async def check(self, message: Message) -> Union[dict, bool]:
+        user_or_none = db.get_user_or_none_by_telegram_id(message.from_user.id)
+        if user_or_none is None:
+            return False
+        return {'current_user': user_or_none}

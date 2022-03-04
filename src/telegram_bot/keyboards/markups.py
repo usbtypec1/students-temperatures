@@ -1,14 +1,23 @@
-from aiogram.types import InlineKeyboardMarkup, ReplyKeyboardMarkup
+from aiogram.types import ReplyKeyboardMarkup, InlineKeyboardMarkup
 
-from admins_telegram_bot.keyboards import buttons
+from . import buttons
 
 __all__ = (
     'MainMenuMarkup',
-    'NotMarkedTemperaturesMenuMarkup',
 )
 
 
 class MainMenuMarkup(ReplyKeyboardMarkup):
+
+    def __init__(self):
+        super().__init__(
+            keyboard=[[buttons.MarkTemperatureButton()],
+                      [buttons.ClassmatesListButton(), buttons.MyTemperatureHistoryButton()]],
+            resize_keyboard=True,
+        )
+
+
+class AdminMenuMarkup(ReplyKeyboardMarkup):
 
     def __init__(self):
         super().__init__(

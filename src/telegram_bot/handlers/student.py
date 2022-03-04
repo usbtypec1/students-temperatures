@@ -1,40 +1,41 @@
 from aiogram.dispatcher import FSMContext
-from aiogram.dispatcher.filters import Command, Text
+from aiogram.dispatcher.filters import Text, Command
 from aiogram.types import ChatType, ContentType, Message
 
 import config
 import db
-from users_telegram_bot import responses, fsm_states, filters
-from users_telegram_bot.bot import dp
+from telegram_bot import filters, fsm_states, responses
+from telegram_bot.bot import dp
 
 
 @dp.message_handler(
     Text('👦 Одноклассники'),
+    filters.OnlyStudentsFilter(),
     chat_type=ChatType.PRIVATE,
     state='*',
     content_types=ContentType.TEXT,
 )
 @dp.message_handler(
     Command('classmates'),
+    filters.OnlyStudentsFilter(),
     chat_type=ChatType.PRIVATE,
     state='*',
     content_types=ContentType.TEXT,
 )
 async def on_classmates_command(message: Message, state: FSMContext):
-    users = db.User.select()
     await state.finish()
-    return responses.ClassmatesListResponse(users)
+    return responses.ClassmatesListResponse(db.User.select())
 
 
 @dp.message_handler(
     Text('🌡 Отметить температуру'),
-    chat_type=ChatType.PRIVATE,
+    filters.OnlyStudentsFilter(),
     state='*',
     content_types=ContentType.TEXT,
 )
 @dp.message_handler(
     Command('mark_temperature'),
-    chat_type=ChatType.PRIVATE,
+    filters.OnlyStudentsFilter(),
     state='*',
     content_types=ContentType.TEXT,
 )
@@ -45,12 +46,14 @@ async def on_mark_temperature_command(message: Message):
 
 @dp.message_handler(
     Text('📆 История'),
+    filters.OnlyStudentsFilter(),
     chat_type=ChatType.PRIVATE,
     state='*',
     content_types=ContentType.TEXT,
 )
 @dp.message_handler(
     Command('history'),
+    filters.OnlyStudentsFilter(),
     chat_type=ChatType.PRIVATE,
     state='*',
     content_types=ContentType.TEXT,
@@ -62,9 +65,9 @@ async def on_history_command(message: Message, state: FSMContext, current_user: 
 
 
 @dp.message_handler(
+    filters.OnlyStudentsFilter(),
     filters.StudentOwnTemperatureFilter(),
     filters.ValidTemperatureFilter(),
-    chat_type=ChatType.PRIVATE,
     content_types=ContentType.TEXT,
     state=fsm_states.MarkTemperatureStates.temperature,
 )
@@ -80,10 +83,10 @@ async def on_student_own_temperature_input(message: Message, current_user: db.Us
 
 
 @dp.message_handler(
+    filters.OnlyStudentsFilter(),
     filters.ClassmateTemperatureFilter(),
     filters.ValidTemperatureFilter(),
     filters.NameMatchRatioThresholdFilter(config.NAME_MATCH_RATIO_THRESHOLD),
-    chat_type=ChatType.PRIVATE,
     content_types=ContentType.TEXT,
     state=fsm_states.MarkTemperatureStates.temperature,
 )
@@ -108,9 +111,9 @@ async def on_classmate_temperature_input(
 
 
 @dp.message_handler(
-    chat_type=ChatType.PRIVATE,
+    filters.OnlyStudentsFilter(),
     state='*',
     content_types=ContentType.TEXT,
 )
-async def on_start_command(message: Message):
+async def on_student_start_command(message: Message):
     return responses.MainMenuResponse()
