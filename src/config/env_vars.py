@@ -1,14 +1,11 @@
-from environs import Env
+import os
+import urllib.parse
 
 __all__ = (
-    'ADMINS_TELEGRAM_BOT_TOKEN',
-    'USERS_TELEGRAM_BOT_TOKEN',
-    'ADMINS_TELEGRAM_IDS',
+    'TELEGRAM_BOT_TOKEN',
+    'DATABASE',
 )
 
-env = Env()
-env.read_env()
 
-ADMINS_TELEGRAM_IDS = env.list('ADMINS_TELEGRAM_IDS', subcast=int)
-USERS_TELEGRAM_BOT_TOKEN = env.str('USERS_TELEGRAM_BOT_TOKEN')
-ADMINS_TELEGRAM_BOT_TOKEN = env.str('ADMINS_TELEGRAM_BOT_TOKEN')
+TELEGRAM_BOT_TOKEN: str = os.getenv('TELEGRAM_BOT_TOKEN')
+DATABASE: urllib.parse.ParseResult = urllib.parse.urlparse(os.getenv('DATABASE_URL'))
