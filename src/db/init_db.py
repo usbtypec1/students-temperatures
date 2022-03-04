@@ -1,5 +1,11 @@
 import config
-from db.models import User
+from db.engine import database
+from db.models import User, TemperatureRecord
+
+database.create_tables((
+    User,
+    TemperatureRecord,
+))
 
 telegram_id_to_user = {user.telegram_id: user for user in User.select()}
 
