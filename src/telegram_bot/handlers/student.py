@@ -11,14 +11,12 @@ from telegram_bot.bot import dp
 @dp.message_handler(
     Text('👦 Одноклассники'),
     filters.OnlyStudentsFilter(),
-    chat_type=ChatType.PRIVATE,
     state='*',
     content_types=ContentType.TEXT,
 )
 @dp.message_handler(
     Command('classmates'),
     filters.OnlyStudentsFilter(),
-    chat_type=ChatType.PRIVATE,
     state='*',
     content_types=ContentType.TEXT,
 )
@@ -54,7 +52,6 @@ async def on_mark_temperature_command(message: Message):
 @dp.message_handler(
     Command('history'),
     filters.OnlyStudentsFilter(),
-    chat_type=ChatType.PRIVATE,
     state='*',
     content_types=ContentType.TEXT,
 )
