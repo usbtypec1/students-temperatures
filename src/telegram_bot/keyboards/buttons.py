@@ -4,6 +4,7 @@ __all__ = (
     'MarkTemperatureButton',
     'ClassmatesListButton',
     'MyTemperatureHistoryButton',
+    'DownloadExcelReportFileButton'
 )
 
 
@@ -36,3 +37,9 @@ class NotifyToMarkTemperatureButton(InlineKeyboardButton):
     def __init__(self):
         super().__init__('🔈 Напомнить отметить температуру',
                          callback_data='notify-to-mark-temperature')
+
+
+class DownloadExcelReportFileButton(KeyboardButton):
+
+    def __init__(self):
+        super().__init__('💾 Скачать полный отчёт в формате excel')

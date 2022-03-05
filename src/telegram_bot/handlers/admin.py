@@ -4,9 +4,26 @@ from aiogram.types import ContentType, Message, CallbackQuery
 import db
 from telegram_bot import responses, filters
 from telegram_bot.bot import dp
+from utils.excel_report.report_generator import TemperaturesReportGenerator
+from utils.file_utils import TempFileProxy
+
+
+@dp.message_handler(
+    Text('💾 Скачать полный отчёт в формате excel'),
+    filters.OnlyAdminsFilter(),
+)
+async def on_download_excel_report_file_command(message: Message):
+    students = db.User.select()
+    temperature_records = db.TemperatureRecord.select()
+    with TempFileProxy('xlsx') as tmp_file_proxy:
+        with TemperaturesReportGenerator(tmp_file_proxy.file_path) as report:
+            report.write_report(students, temperature_records)
+        with open(tmp_file_proxy.file_path, 'rb') as report_file_bytes:
+            await message.answer_document(report_file_bytes)
 
 
 @dp.callback_query_handler(
+    Text('notify-to-mark-temperature'),
     filters.OnlyAdminsFilter(),
 )
 async def on_notify_to_mark_temperatures_cb(callback_query: CallbackQuery):

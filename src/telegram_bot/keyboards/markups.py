@@ -21,7 +21,8 @@ class AdminMenuMarkup(ReplyKeyboardMarkup):
 
     def __init__(self):
         super().__init__(
-            keyboard=[[buttons.MarkedTemperaturesReportButton()]],
+            keyboard=[[buttons.MarkedTemperaturesReportButton()],
+                      [buttons.DownloadExcelReportFileButton()]],
             resize_keyboard=True,
         )
 
