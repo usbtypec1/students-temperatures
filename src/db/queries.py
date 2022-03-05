@@ -13,6 +13,7 @@ __all__ = (
     'update_student_temperature_by_current_time',
     'get_today_temperature_records',
     'get_users_exclude_by_id',
+    'get_user_telegram_ids',
 )
 
 
@@ -68,3 +69,7 @@ def get_today_temperature_records() -> Iterable[TemperatureRecord]:
 
 def get_users_exclude_by_id(user_ids: Iterable[int]) -> Iterable[User]:
     return User.select().where(User.id.not_in(user_ids)).execute()
+
+
+def get_user_telegram_ids() -> list[int]:
+    return [user.telegram_id for user in User.select()]

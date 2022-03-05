@@ -9,8 +9,16 @@ from utils.file_utils import TempFileProxy
 
 
 @dp.message_handler(
+    Command('download_as_excel'),
+    filters.OnlyAdminsFilter(),
+    state='*',
+    content_types=ContentType.TEXT,
+)
+@dp.message_handler(
     Text('💾 Скачать полный отчёт в формате excel'),
     filters.OnlyAdminsFilter(),
+    state='*',
+    content_types=ContentType.TEXT,
 )
 async def on_download_excel_report_file_command(message: Message):
     students = db.User.select()
