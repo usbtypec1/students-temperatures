@@ -50,7 +50,7 @@ class TemperaturesReportGenerator:
             Modifies the worksheet.
         """
         student_first_name_cells = [StudentNameCell(self._ws, user.first_name) for user in users]
-        student_first_names_row = (None, *student_first_name_cells)
+        student_first_names_row = [StudentNameCell(self._ws, 'Дата')] + student_first_name_cells
         self._ws.append(student_first_names_row)
 
     def write_temperature_records(self, users: Iterable[db.TemperatureRecord],
