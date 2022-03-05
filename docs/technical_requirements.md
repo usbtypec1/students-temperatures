@@ -1,25 +1,30 @@
-# 1. Цель проекта
-Нужно разработать систему, где ученики 11-Ж класса смогут ежедневно отмечать свою температуру.
+# 1. Project purposes
+The system where students of 11-J class 
+could mark their temperatures in telegram bot need to be developed. 
+I am doing it because it annoys me when someone sends 
+his senseless message to main whatsapp group.
 
+# 2. Description
+There will be two different types of users - students and admins.
+Authentication via telegram id.
 
-# 2. Описание системы
-Система состоит из следующих основных функциональных блоков:
-
-1. Ученик:
-   - Функционал для отметки собственной температуры
-   - Функционал для отметки температуры одноклассника
-   - Интерфейс в телеграм боте
-   - Просмотр температур одноклассников
-2. Учитель:
-   - Отметка температуры любого ученика
-   - Просмотр температур всех учеников
-   - Экспорт данных о температурах в формате xlsx
-   - Подробный отчёт
-
-## 2.1. Типы пользователей
-Будет два типа пользователей - ученики и учителя.
-Аутентификация будет происходить по ID в телеграме.
-
-# 3. Используемый стек технологий
+1. Student:
+   - Mark his own temperature
+   - Mark his classmate's temperature
+   - View his own temperature's history
+2. Admin:
+   - View all temperatures
+   - Export all temperatures as excel
+   - Send notifications to students to mark their temperatures
+3. Non-user:
+   - Non-users have no access to the telegram bot
+   
+# 3. Technology stack
 - aiogram
-- tortoise orm
+- peewee orm
+- openpyxl
+- fuzzywuzzy
+- pendulum
+
+# 4. Hosting
+The project will be hosted on Heroku
