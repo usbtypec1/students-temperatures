@@ -52,7 +52,7 @@ class ValidTemperatureFilter(BoundFilter):
     async def check(self, message: Message) -> Union[bool, dict]:
         temperature, classmate_name = parsers.parse_user_temperature_input(message.text)
         try:
-            temperature = parsers.parse_str_to_float(temperature)
+            temperature = parsers.parse_str_to_float(temperature, rounding=1)
         except ValueError:
             await message.answer('Неправильно введена температура')
             raise CancelHandler
