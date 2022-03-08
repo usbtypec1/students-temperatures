@@ -12,4 +12,5 @@ database = PostgresqlDatabase(
     host=config.DATABASE.hostname,
     password=config.DATABASE.password,
     database=config.DATABASE.path.lstrip('/'),
+    autorollback=True,
 )
